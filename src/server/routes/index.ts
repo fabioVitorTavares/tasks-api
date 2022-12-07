@@ -13,10 +13,6 @@ router.post('/', addTask);
 router.get('/', getTask);
 
 
-router.delete('/', (req, res) => {  
-  
-  return res.status(StatusCodes.OK).send('delete');
-});
 
 
 

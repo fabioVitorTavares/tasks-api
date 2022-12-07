@@ -5,3 +5,7 @@ export type TTask = {
   status: string,
   dateCompleted?: string,
 }
+
+export type TDay = {
+  tasks: TTask[],
+}
