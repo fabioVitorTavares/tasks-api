@@ -9,3 +9,7 @@ export type TTask = {
 export type TDay = {
   tasks: TTask[],
 }
+
+export type TUser = {
+  days: TDay[],
+}

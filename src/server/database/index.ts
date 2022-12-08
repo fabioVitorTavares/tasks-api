@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb';
+import 'dotenv/config';
 
-const client = new MongoClient('mongodb+srv://fabioVitorTavares:lP2oWzjUjLIEqiDW@cluster0.oqxp0oo.mongodb.net/?retryWrites=true&w=majority');
+
+const client = new MongoClient(process.env.URL_MONGO_DB as string);
 
 
 export { client };

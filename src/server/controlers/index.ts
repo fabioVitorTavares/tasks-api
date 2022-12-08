@@ -20,7 +20,18 @@ const taskValidations: yup.SchemaOf<TTask> = yup.object().shape({
 
 export const addTask = async (req: Request<TTask>, res: Response) => {
   const task = req.body;
-  const doc = { '06/12/2022': task };
+  const doc =
+  {
+    id: '0',
+    days: [
+      {
+        date: '07/12/2022',
+        tasks: [
+          task
+        ]
+      }
+    ]
+  };
   try {
     const validTask = await taskValidations.isValid(req.body); 
     console.log(validTask);
@@ -53,7 +64,19 @@ export const addTask = async (req: Request<TTask>, res: Response) => {
 export const getTask = async (req: Request, res: Response) => {
   
   try {
-    return res.json(tasks);
+    client.connect(async () => {
+      try {
+        const db = client.db(process.env.DB_NAME);
+        const collection = db.collection(process.env.COLLECTION_NAME as string);
+        console.log('aqui');
+        const datas = await collection.find({});
+        
+        console.log(datas.forEach((e)=> console.log(e.days[0].tasks)));
+        res.json(datas);
+      } catch (error) {
+        console.log('Erro de conexão com o banco de dados!', error);
+      }
+    });
   } catch (error) {
     console.log(error);
   }
