@@ -1,4 +1,4 @@
-import { TTask } from '../../types';
+import { TTask, TUser } from '../../types';
 import { Request, Response } from 'express';
 import * as yup from 'yup';
 import { client } from '../database';
@@ -71,8 +71,11 @@ export const getTask = async (req: Request, res: Response) => {
         console.log('aqui');
         const datas = await collection.find({});
         
-        console.log(datas.forEach((e)=> console.log(e.days[0].tasks)));
-        res.json(datas);
+        const datasReturn = await datas.filter((e: TUser) => console.log(e.days[0].tasks));
+        console.log(datasReturn);
+        
+        res.json(datasReturn);
+        
       } catch (error) {
         console.log('Erro de conexão com o banco de dados!', error);
       }
@@ -81,8 +84,6 @@ export const getTask = async (req: Request, res: Response) => {
     console.log(error);
   }
 
-  console.log(tasks);
-  return res.send(tasks);
 };
 
 
