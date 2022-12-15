@@ -1,4 +1,6 @@
 export type TTask = {
+  id: number,
+  date: string,
   description: string,
   dateCreated: string,
   deadline: string,
@@ -7,9 +9,7 @@ export type TTask = {
 }
 
 export type TDay = {
+  date: string,
   tasks: TTask[],
 }
 
-export type TUser = {
-  days: TDay[],
-}
