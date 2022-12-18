@@ -73,10 +73,9 @@ export const getTask = async (req: Request, res: Response) => {
       try {
         const db = client.db(process.env.DB_NAME);
         const collection = db.collection(process.env.COLLECTION_NAME as string);
-        console.log('aqui');
-        const datas = await collection.find({});
-        const tasks = await datas.toArray();
-        console.log(tasks);
+        
+        const datas = await collection.findOne({date: req.body.date});
+        const tasks = await datas?.tasks;     
         res.json(tasks);
         
       } catch (error) {
