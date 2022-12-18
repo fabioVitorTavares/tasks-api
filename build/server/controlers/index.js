@@ -95,12 +95,12 @@ const getTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 res.json(tasks);
             }
             catch (error) {
-                console.log('Erro de conexão com o banco de dados!', error);
+                return res.send('Error connect database: ');
             }
         }));
     }
     catch (error) {
-        console.log(error);
+        return res.send('Err');
     }
 });
 exports.getTask = getTask;

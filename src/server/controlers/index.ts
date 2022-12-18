@@ -74,11 +74,11 @@ export const getTask = async (req: Request, res: Response) => {
         res.json(tasks);
         
       } catch (error) {
-        console.log('Erro de conexão com o banco de dados!', error);
+        return res.send('Error connect database: ');
       }
     });
   } catch (error) {
-    console.log(error);
+    return res.send('Err');
   }
 
 };
