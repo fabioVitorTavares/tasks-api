@@ -7,3 +7,4 @@ const router = (0, express_1.Router)();
 exports.router = router;
 router.post('/', controlers_1.addTask);
 router.get('/', controlers_1.getTask);
+router.put('/', controlers_1.updateTask);

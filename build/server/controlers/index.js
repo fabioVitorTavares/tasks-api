@@ -32,13 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTask = exports.addTask = void 0;
+exports.updateTask = exports.getTask = exports.addTask = void 0;
 const yup = __importStar(require("yup"));
 const database_1 = require("../database");
 const taskValidations = yup.object().shape({
     id: yup.number().required(),
     date: yup.string().required(),
-    description: yup.string().required().min(3),
+    description: yup.string().required(),
     dateCreated: yup.string().required().min(10),
     deadline: yup.string().required().min(10),
     status: yup.string().required(),
@@ -104,3 +104,24 @@ const getTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getTask = getTask;
+const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { date, idTask, newStatus } = req.body;
+    try {
+        database_1.client.connect(() => __awaiter(void 0, void 0, void 0, function* () {
+            const db = database_1.client.db(process.env.DB_NAME);
+            const collection = db.collection(process.env.COLLECTION_NAME);
+            const day = yield collection.findOne({ date: date });
+            const tasks = yield (day === null || day === void 0 ? void 0 : day.tasks);
+            for (const task of tasks) {
+                if (task.id == idTask) {
+                    task.status = newStatus;
+                }
+            }
+            yield collection.updateOne({ date: date }, { $set: { tasks: tasks } });
+        }));
+    }
+    catch (error) {
+        console.log('Erro de conexão com o banco de dados!', error);
+    }
+});
+exports.updateTask = updateTask;
