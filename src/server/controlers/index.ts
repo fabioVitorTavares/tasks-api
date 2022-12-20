@@ -80,7 +80,6 @@ export const getTask = async (req: Request, res: Response) => {
   } catch (error) {
     return res.send('Err');
   }
-
 };
 
 
@@ -101,8 +100,25 @@ export const updateTask = async (req: Request, res: Response) => {
         }
       }
       await collection.updateOne({ date: date }, { $set: { tasks: tasks } });
-      console.log('update', tasks);
       res.send('Success update');
+    });
+  } catch (error) {
+    console.log('Erro de conexão com o banco de dados!', error);    
+  }
+};
+
+export const removeTask = async (req: Request, res: Response) => {
+  const {date, idTask} = req.body;
+
+  try {
+    client.connect(async () => {
+      const db = client.db(process.env.DB_NAME);
+      const collection = db.collection(process.env.COLLECTION_NAME as string);
+      const day = await collection.findOne({ date: date });      
+      const oldTasks = await day?.tasks as TTask[];
+      const newTasks = oldTasks.filter(task => task.id != idTask);      
+      await collection.updateOne({ date: date }, { $set: { tasks: newTasks } });
+      res.send('Task removed successfull');
     });
   } catch (error) {
     console.log('Erro de conexão com o banco de dados!', error);    

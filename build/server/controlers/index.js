@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTask = exports.getTask = exports.addTask = void 0;
+exports.removeTask = exports.updateTask = exports.getTask = exports.addTask = void 0;
 const yup = __importStar(require("yup"));
 const database_1 = require("../database");
 const taskValidations = yup.object().shape({
@@ -105,7 +105,7 @@ const getTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTask = getTask;
 const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { date, idTask, newStatus } = req.body;
+    const { date, idTask, newStatus, dateCompleted } = req.body;
     try {
         database_1.client.connect(() => __awaiter(void 0, void 0, void 0, function* () {
             const db = database_1.client.db(process.env.DB_NAME);
@@ -115,9 +115,11 @@ const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             for (const task of tasks) {
                 if (task.id == idTask) {
                     task.status = newStatus;
+                    task.dateCompleted = dateCompleted;
                 }
             }
             yield collection.updateOne({ date: date }, { $set: { tasks: tasks } });
+            res.send('Success update');
         }));
     }
     catch (error) {
@@ -125,3 +127,21 @@ const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateTask = updateTask;
+const removeTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { date, idTask } = req.body;
+    try {
+        database_1.client.connect(() => __awaiter(void 0, void 0, void 0, function* () {
+            const db = database_1.client.db(process.env.DB_NAME);
+            const collection = db.collection(process.env.COLLECTION_NAME);
+            const day = yield collection.findOne({ date: date });
+            const oldTasks = yield (day === null || day === void 0 ? void 0 : day.tasks);
+            const newTasks = oldTasks.filter(task => task.id != idTask);
+            yield collection.updateOne({ date: date }, { $set: { tasks: newTasks } });
+            res.send('Task removed successfull');
+        }));
+    }
+    catch (error) {
+        console.log('Erro de conexão com o banco de dados!', error);
+    }
+});
+exports.removeTask = removeTask;

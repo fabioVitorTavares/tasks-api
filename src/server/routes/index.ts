@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { addTask, getTask, updateTask } from '../controlers';
+import { addTask, getTask, updateTask, removeTask } from '../controlers';
 
 const router = Router();
 
@@ -14,7 +13,7 @@ router.get('/', getTask);
 
 router.put('/', updateTask);
 
-
+router.delete('/', removeTask);
 
 
 export { router };
